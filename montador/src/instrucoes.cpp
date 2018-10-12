@@ -27,7 +27,6 @@ bool Instructions::isInstruction(std::string label)
 {
     for (int i = 0; i < _instruction.size(); i++)
     {
-        if (strcmp())
-    }
+        }
     return true;
 }

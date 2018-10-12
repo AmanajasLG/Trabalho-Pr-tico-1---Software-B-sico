@@ -8,23 +8,23 @@
 class Instructions
 {
 
-    struct Instruction
-    {
-        std::string name;
-        int op_number;
-        int op_code;
-        int size;
-    };
+  struct Instruction
+  {
+    std::string name;
+    int op_number;
+    int op_code;
+    int size;
+  };
 
-  public:
-    /*
+public:
+  /*
     * Formato arquivo instrucoes.txt
     * mnemônico - operandos - código - tamanho
     */
-    bool isInstruction();
+  bool isInstruction(std::string label);
 
-    void readInstructionFile();
+  void readInstructionFile();
 
-  private:
-    std::vector<Instruction> _instruction;
+private:
+  std::vector<Instruction> _instruction;
 };

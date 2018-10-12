@@ -1,21 +1,28 @@
-#include <stdio.h>
+#include <iostream>
 #include <stdbool.h>
-#include "/home/amanajas/Desktop/TrabalhoPratico1-SoftwareBasico/montador/include/intrucoes.hpp"
-#include "/home/amanajas/Desktop/TrabalhoPratico1-SoftwareBasico/montador/include/diretivas.hpp"
+#include "../include/preprocessamento.hpp"
 
-int main()
+int main(int argc, char *argv[])
 {
-    std::cout << "UE FDP" << std::endl;
-    Instructions *inst = new Instructions();
-    inst->readInstructionFile();
-
-    if (inst->isInstruction("add"))
+    if (argc != 2)
     {
-        std::cout << "AE CARALHO" << std::endl;
+        std::cout << "ERRO - Numero invalido de argumentos" << std::endl;
+        std::cout << "Insira: ./montador file_name" << std::endl;
+        std::cout << "file_name deve ser inserido sem extensao - pre-definida: .asm" << std::endl;
+        return 0;
     }
 
-    Directives *dire = new Directives();
-    dire->readDirectiveFile();
+    std::cout << argv[0] << ", " << argv[1] << std::endl;
+
+    Tables *_tables = new Tables();
+    InstructionAnalizer _analizer;
+
+    PreProcessing *pre_proc = new PreProcessing(argv[1], *_tables, _analizer);
+
+    if (pre_proc->isFileOpen())
+    {
+        pre_proc->PreProcess();
+    }
 
     return 0;
 }

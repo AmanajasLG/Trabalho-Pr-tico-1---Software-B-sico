@@ -155,26 +155,19 @@ int main()
         while (ch != NULL)
         {
 
-            printf("FDP\n");
             if (strcmp("EQU", ch) == 0)
             {
-                printf("%s\n", ch);
                 ch = strtok(NULL, " \n");
-                printf("%s 2\n", ch);
                 strcpy(equivalencia[k].simbolo, ch);
-                printf("%s 3\n", ch);
                 ch = strtok(NULL, " \n");
                 equivalencia[k].valor = strtol(ch, (char **)NULL, 10);
                 k++;
                 flagImprimir = 0;
                 break;
             }
-            printf("FDP DO CARALHO\n");
             if (strcmp("IF", ch) == 0)
             {
             }
-            printf("VTNC\n");
-            fprintf(fp, "%s", ch);
             ch = strtok(NULL, " \n");
             if (ch != NULL)
             {

@@ -1,1 +1,1 @@
-g++ -o montador src/montador.cpp src/instrucoes.cpp src/diretivas.cpp  -std=c++11 -L/usr/local/lib/ -lboost_filesystem
+g++ -o montador src/montador.cpp src/analizador_de_instrucao.cpp src/preprocessamento.cpp src/tabelas.cpp src/memoria.cpp -std=c++11 -L/usr/local/lib/ -lboost_filesystem

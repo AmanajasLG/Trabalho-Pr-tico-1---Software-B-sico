@@ -1,4 +1,5 @@
 #include "/home/amanajas/Desktop/TrabalhoPratico1-SoftwareBasico/montador/include/intrucoes.hpp"
+#include <boost/algorithm/string.hpp>
 
 void Instructions::readInstructionFile()
 {
@@ -27,6 +28,8 @@ bool Instructions::isInstruction(std::string label)
 {
     for (int i = 0; i < _instruction.size(); i++)
     {
-        }
-    return true;
+        if (boost::iequals(label, _instruction[i].name))
+            return true;
+    }
+    return false;
 }

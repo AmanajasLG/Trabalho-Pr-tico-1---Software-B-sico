@@ -5,8 +5,14 @@
 
 int main()
 {
+    std::cout << "UE FDP" << std::endl;
     Instructions *inst = new Instructions();
     inst->readInstructionFile();
+
+    if (inst->isInstruction("add"))
+    {
+        std::cout << "AE CARALHO" << std::endl;
+    }
 
     Directives *dire = new Directives();
     dire->readDirectiveFile();

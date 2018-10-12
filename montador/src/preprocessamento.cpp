@@ -39,7 +39,7 @@ void PreProcessing::PreProcess()
                 {
                     break;
                 }
-                else if (boost::iequals(words[i], "IF"))
+                else if (boost::iequals(words[i], "IF") && i < 2)
                 {
                     if (i != 0)
                     {
@@ -48,21 +48,30 @@ void PreProcessing::PreProcess()
                             write_line += words[j] + " ";
                         }
                     }
-                    if (!tables.isSymbolInDefinitionTable(words[i + 1]) && tables.getDefinitionVal(words[i + 1]) == 0)
+
+                    if (!tables.isSymbolInDefinitionTable(words[i + 1]) || tables.getDefinitionVal(words[i + 1]) == 0)
                     {
                         std::getline(file_asm, line);
-                        break;
                     }
+                    break;
                 }
                 else if (words[i].find_first_not_of(" ") != words[i].size() - 1)
                 {
+
                     if (!tables.isSymbolInDefinitionTable(words[i]))
                     {
                         write_line += words[i] + " ";
                     }
                     else
                     {
-                        write_line += std::to_string(tables.getDefinitionVal(words[i])) + " ";
+                        if (words[i].back() == ',')
+                        {
+                            write_line += std::to_string(tables.getDefinitionVal(words[i])) + ", ";
+                        }
+                        else
+                        {
+                            write_line += std::to_string(tables.getDefinitionVal(words[i])) + " ";
+                        }
                     }
                 }
             }

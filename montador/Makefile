@@ -1,0 +1,1 @@
+g++ -o montador src/montador.cpp src/instrucoes.cpp src/diretivas.cpp  -std=c++11

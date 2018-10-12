@@ -1,34 +1,33 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <../include/boost_1_68_0/boost/algorithm/string.hpp>
+#include "/home/amanajas/Desktop/TrabalhoPratico1-SoftwareBasico/montador/include/intrucoes.hpp"
 
-class Instructions
+void Instructions::readInstructionFile()
 {
-
-    struct Instruction
+    std::string line;
+    std::ifstream file;
+    file.open("instrucoes.txt");
+    if (!file.is_open())
     {
-        std::string name;
-        int code;
-        int size;
-    };
-
-  public:
-    /*
-    * Formato arquivo instrucoes.txt
-    * mnemônico - operandos - código - tamanho
-    */
-    bool isInstruction()
-    {
+        std::cout << "Error - File not open" << std::endl;
+        return;
     }
 
-    void readInstructionFile()
+    while (!file.eof())
     {
-        std::ifstream file;
-        file.open("instrucoes.txt");
-    }
+        getline(file, line);
+        std::istringstream iss(line);
+        std::vector<std::string> result;
+        for (std::string s; iss >> s;)
+            result.push_back(s);
 
-  private:
-    std::vector<Instruction> _instructon;
-};
+        _instruction.push_back(Instruction{result[0], std::stoi(result[1]), std::stoi(result[2]), std::stoi(result[3])});
+    }
+}
+
+bool Instructions::isInstruction(std::string label)
+{
+    for (int i = 0; i < _instruction.size(); i++)
+    {
+        if (strcmp())
+    }
+    return true;
+}

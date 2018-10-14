@@ -1,32 +1,33 @@
-#include "../include/analizador_de_instrucao.hpp"
+#include "../include/analisador_de_instrucao.hpp"
 #include "../include/tabelas.hpp"
 
 /*
 *   Processamento 
-*   Retira comentários e valida diretivas EQU e IF
+*   Gera arquivo .obj
 */
 class PreProcessing
 {
   public:
     PreProcessing(std::string file_name, Tables tables, InstructionAnalizer analizer) : file_name(file_name), tables(tables), analizer(analizer)
     {
-        file_asm.open(file_name + ".asm");
+        file_pre.open(file_name + ".pre");
     }
 
     ~PreProcessing()
     {
-        file_asm.close();
         file_pre.close();
+        file_obj.close();
     }
 
-    void PreProcess();
+    void FirstPass();
+    void SecondPass();
 
     bool isFileOpen();
 
   private:
     std::string file_name;
-    std::ifstream file_asm;
-    std::ofstream file_pre;
+    std::ifstream file_pre;
+    std::ofstream file_obj;
     Tables tables;
     InstructionAnalizer analizer;
 };

@@ -1,4 +1,4 @@
-#include "../include/analizador_de_instrucao.hpp"
+#include "../include/analisador_de_instrucao.hpp"
 #include "../include/tabelas.hpp"
 
 /*

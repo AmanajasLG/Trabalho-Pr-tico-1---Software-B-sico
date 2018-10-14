@@ -42,6 +42,8 @@ class InstructionAnalizer
     */
     bool isInstruction(std::string label);
 
+    int instructionOpNuber(std::string label);
+
     void readInstructionFile();
 
     bool isLable(std::string lable)

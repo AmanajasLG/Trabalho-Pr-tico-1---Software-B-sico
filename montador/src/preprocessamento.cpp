@@ -29,7 +29,7 @@ void PreProcessing::PreProcess()
         {
             std::string lable = words[0];
             lable.pop_back();
-            tables.addElementDefinitionTable(lable, std::stoi(words[2]));
+            tables.AddElementDefinitionTable(lable, std::stoi(words[2]));
         }
         else if (words[0] != "\n")
         {
@@ -49,7 +49,7 @@ void PreProcessing::PreProcess()
                         }
                     }
 
-                    if (!tables.isSymbolInDefinitionTable(words[i + 1]) || tables.getDefinitionVal(words[i + 1]) == 0)
+                    if (!tables.IsSymbolInDefinitionTable(words[i + 1]) || tables.GetDefinitionVal(words[i + 1]) == 0)
                     {
                         std::getline(file_asm, line);
                     }
@@ -58,7 +58,7 @@ void PreProcessing::PreProcess()
                 else if (words[i].find_first_not_of(" ") != words[i].size() - 1)
                 {
 
-                    if (!tables.isSymbolInDefinitionTable(words[i]))
+                    if (!tables.IsSymbolInDefinitionTable(words[i]))
                     {
                         write_line += words[i] + " ";
                     }
@@ -66,11 +66,11 @@ void PreProcessing::PreProcess()
                     {
                         if (words[i].back() == ',')
                         {
-                            write_line += std::to_string(tables.getDefinitionVal(words[i])) + ", ";
+                            write_line += std::to_string(tables.GetDefinitionVal(words[i])) + ", ";
                         }
                         else
                         {
-                            write_line += std::to_string(tables.getDefinitionVal(words[i])) + " ";
+                            write_line += std::to_string(tables.GetDefinitionVal(words[i])) + " ";
                         }
                     }
                 }

@@ -11,6 +11,9 @@ class Tables
     {
         std::string symbol;
         int addr;
+        std::string section;
+        int value;
+        bool isConst;
     };
 
     struct DefinitionTable
@@ -26,17 +29,20 @@ class Tables
     };
 
   public:
-    void addElementSymbolTable(std::string symbol, int addr);
-    int getSymbolAddr(std::string symbol);
-    bool isSymbolInSymbolTable(std::string symbol);
+    void AddElementSymbolTable(std::string symbol, int addr, std::string section = "TEXT", int value = 0, bool isConst = false);
+    int GetSymbolAddr(std::string symbol);
+    int GetSymbolValue(std::string symbol);
+    bool IsSymbolConst(std::string symbol);
+    bool IsSymbolInSymbolTable(std::string symbol);
+    std::string SymbolSection(std::string symbol);
 
-    void addElementDefinitionTable(std::string symbol, int val);
-    int getDefinitionVal(std::string symbol);
-    bool isSymbolInDefinitionTable(std::string symbol);
+    void AddElementDefinitionTable(std::string symbol, int val);
+    int GetDefinitionVal(std::string symbol);
+    bool IsSymbolInDefinitionTable(std::string symbol);
 
-    void addElementUseTable(std::string symbol, int addr);
-    int getUseAddr(std::string symbol);
-    bool isSymbolInUseTable(std::string symbol);
+    void AddElementUseTable(std::string symbol, int addr);
+    int GetUseAddr(std::string symbol);
+    bool IsSymbolInUseTable(std::string symbol);
 
   private:
     std::vector<SymbolTable> _symbols;

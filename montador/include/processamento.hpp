@@ -1,26 +1,31 @@
-#include "../include/analisador_de_instrucao.hpp"
-#include "../include/tabelas.hpp"
+#include "../include/testes.hpp"
+#include "../include/memoria.hpp"
+
+#ifndef PROCESSING_H
 
 /*
 *   Processamento 
 *   Gera arquivo .obj
 */
-class PreProcessing
+
+#define PROCESSING_H
+
+class Processing
 {
   public:
-    PreProcessing(std::string file_name, Tables tables, InstructionAnalizer analizer) : file_name(file_name), tables(tables), analizer(analizer)
+    Processing(std::string file_name, Tables *tables, InstructionAnalizer analizer) : file_name(file_name), tables(tables), analizer(analizer)
     {
         file_pre.open(file_name + ".pre");
     }
 
-    ~PreProcessing()
+    void CloseFiles()
     {
         file_pre.close();
         file_obj.close();
     }
 
-    void FirstPass();
-    void SecondPass();
+    bool FirstPass();
+    bool SecondPass();
 
     bool isFileOpen();
 
@@ -28,6 +33,10 @@ class PreProcessing
     std::string file_name;
     std::ifstream file_pre;
     std::ofstream file_obj;
-    Tables tables;
+    Tables *tables;
     InstructionAnalizer analizer;
+    Memory memory = Memory();
+    Tests tests = Tests(analizer, tables);
 };
+
+#endif

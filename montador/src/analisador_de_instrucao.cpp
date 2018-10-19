@@ -1,7 +1,7 @@
 #include "../include/analisador_de_instrucao.hpp"
 #include <boost/algorithm/string.hpp>
 
-void InstructionAnalizer::readDirectiveFile()
+void InstructionAnalizer::ReadDirectiveFile()
 {
     std::string line;
     std::ifstream file;
@@ -24,7 +24,7 @@ void InstructionAnalizer::readDirectiveFile()
     }
 }
 
-bool InstructionAnalizer::isDirective(std::string label)
+bool InstructionAnalizer::IsDirective(std::string label)
 {
     for (int i = 0; i < _directive.size(); i++)
     {
@@ -34,7 +34,7 @@ bool InstructionAnalizer::isDirective(std::string label)
     return false;
 }
 
-void InstructionAnalizer::readInstructionFile()
+void InstructionAnalizer::ReadInstructionFile()
 {
     std::string line;
     std::ifstream file;
@@ -57,7 +57,7 @@ void InstructionAnalizer::readInstructionFile()
     }
 }
 
-bool InstructionAnalizer::isInstruction(std::string label)
+bool InstructionAnalizer::IsInstruction(std::string label)
 {
     for (int i = 0; i < _instruction.size(); i++)
     {

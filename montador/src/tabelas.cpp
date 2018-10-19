@@ -1,14 +1,17 @@
 #include "../include/tabelas.hpp"
 #include <boost/algorithm/string.hpp>
 
-void Tables::AddElementSymbolTable(std::string symbol, int addr, std::string section = "TEXT", int value = 0, bool isConst = false)
+void Tables::AddElementSymbolTable(std::string symbol, int addr, std::string section, bool isVariable, bool isZero, bool isConst)
 {
+    if (symbol.back() == ':')
+        symbol.pop_back();
+
     if (IsSymbolInSymbolTable(symbol))
     {
         std::cout << "Simbolo ja esta na tabela!" << std::endl;
         return;
     }
-    _symbols.push_back(SymbolTable{symbol, addr, section, value, isConst});
+    _symbols.push_back(SymbolTable{symbol, addr, section, isVariable, isZero, isConst});
 }
 int Tables::GetSymbolAddr(std::string symbol)
 {
@@ -26,7 +29,7 @@ int Tables::GetSymbolAddr(std::string symbol)
     return -1;
 }
 
-int Tables::GetSymbolValue(std::string symbol)
+bool Tables::IsSymbolValueZero(std::string symbol)
 {
     if (symbol.back() == ',')
         symbol.pop_back();
@@ -35,7 +38,7 @@ int Tables::GetSymbolValue(std::string symbol)
     {
         if (boost::iequals(symbol, _symbols[i].symbol))
         {
-            return _symbols[i].value;
+            return _symbols[i].isZero;
         }
     }
 }
@@ -79,16 +82,16 @@ std::string Tables::SymbolSection(std::string symbol)
     }
 }
 
-void Tables::AddElementDefinitionTable(std::string symbol, int val)
+void Tables::AddElementDefinitionTable(std::string symbol, int addr)
 {
     if (IsSymbolInDefinitionTable(symbol))
     {
         std::cout << "Simbolo ja esta na tabela!" << std::endl;
         return;
     }
-    _defs.push_back(DefinitionTable{symbol, val});
+    _defs.push_back(DefinitionTable{symbol, addr});
 }
-int Tables::GetDefinitionVal(std::string symbol)
+int Tables::GetDefinitionAddr(std::string symbol)
 {
     if (symbol.back() == ',')
         symbol.pop_back();
@@ -97,7 +100,7 @@ int Tables::GetDefinitionVal(std::string symbol)
     {
         if (boost::iequals(symbol, _defs[i].symbol))
         {
-            return _defs[i].val;
+            return _defs[i].addr;
         }
     }
 

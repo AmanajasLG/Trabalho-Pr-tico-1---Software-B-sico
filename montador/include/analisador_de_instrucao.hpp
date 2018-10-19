@@ -5,6 +5,10 @@
 #include <cstring>
 #include <sstream>
 
+#ifndef INSTRUCTIONANALIZER_H
+
+#define INSTRUCTIONANALIZER_H
+
 class InstructionAnalizer
 {
     struct Directive
@@ -25,28 +29,37 @@ class InstructionAnalizer
   public:
     InstructionAnalizer()
     {
-        readDirectiveFile();
-        readInstructionFile();
+        ReadDirectiveFile();
+        ReadInstructionFile();
     }
     /*
     * Formato arquivo instrucoes.txt
     * mnemônico - operandos - tamanho
     */
-    bool isDirective(std::string label);
+    bool IsDirective(std::string label);
 
-    void readDirectiveFile();
+    void ReadDirectiveFile();
 
     /*
     * Formato arquivo instrucoes.txt
     * mnemônico - operandos - código - tamanho
     */
-    bool isInstruction(std::string label);
+    bool IsInstruction(std::string label);
 
-    int instructionOpNuber(std::string label);
+    int GetInstructionOpCode(std::string label)
+    {
+        for (int i = 0; i < _instruction.size(); i++)
+        {
+            if (boost::iequals(_instruction[i].name, label))
+                return _instruction[i].op_code;
+        }
+    }
 
-    void readInstructionFile();
+    int InstructionOpNumber(std::string label);
 
-    bool isLable(std::string lable)
+    void ReadInstructionFile();
+
+    bool IsLable(std::string lable)
     {
         if (lable.back() == ':')
             return true;
@@ -54,7 +67,7 @@ class InstructionAnalizer
         return false;
     }
 
-    bool isComment(std::string lable)
+    bool IsComment(std::string lable)
     {
         if (lable.front() == ';')
             return true;
@@ -66,3 +79,5 @@ class InstructionAnalizer
     std::vector<Directive> _directive;
     std::vector<Instruction> _instruction;
 };
+
+#endif

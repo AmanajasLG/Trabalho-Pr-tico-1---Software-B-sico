@@ -1,10 +1,13 @@
 #include "../include/analisador_de_instrucao.hpp"
 #include "../include/tabelas.hpp"
 
+#ifndef PREPROCESSING_H
 /*
 *   Pre-processamento 
 *   Retira comentários e valida diretivas EQU e IF
 */
+#define PREPROCESSING_H
+
 class PreProcessing
 {
   public:
@@ -13,7 +16,7 @@ class PreProcessing
         file_asm.open(file_name + ".asm");
     }
 
-    ~PreProcessing()
+    void CloseFiles()
     {
         file_asm.close();
         file_pre.close();
@@ -30,3 +33,5 @@ class PreProcessing
     Tables tables;
     InstructionAnalizer analizer;
 };
+
+#endif

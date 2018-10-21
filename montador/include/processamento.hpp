@@ -27,6 +27,8 @@ class Processing
     bool FirstPass();
     bool SecondPass();
 
+    void WriteObjFile();
+
     bool isFileOpen();
 
   private:
@@ -35,8 +37,9 @@ class Processing
     std::ofstream file_obj;
     Tables *tables;
     InstructionAnalizer analizer;
-    Memory memory = Memory();
+    Memory *memory = new Memory();
     Tests tests = Tests(analizer, tables);
+    std::vector<int> relative;
 };
 
 #endif

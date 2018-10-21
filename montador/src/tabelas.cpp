@@ -1,7 +1,7 @@
 #include "../include/tabelas.hpp"
 #include <boost/algorithm/string.hpp>
 
-void Tables::AddElementSymbolTable(std::string symbol, int addr, std::string section, bool isVariable, bool isZero, bool isConst)
+void Tables::AddElementSymbolTable(std::string symbol, int addr, std::string section, bool isVariable, int value, bool isZero, bool isConst, bool isExtern, bool isVector, int vectorSize)
 {
     if (symbol.back() == ':')
         symbol.pop_back();
@@ -11,7 +11,7 @@ void Tables::AddElementSymbolTable(std::string symbol, int addr, std::string sec
         std::cout << "Simbolo ja esta na tabela!" << std::endl;
         return;
     }
-    _symbols.push_back(SymbolTable{symbol, addr, section, isVariable, isZero, isConst});
+    _symbols.push_back(SymbolTable{symbol, addr, section, isVariable, value, isZero, isConst, isExtern, isVector, vectorSize});
 }
 int Tables::GetSymbolAddr(std::string symbol)
 {
@@ -23,6 +23,22 @@ int Tables::GetSymbolAddr(std::string symbol)
         if (boost::iequals(symbol, _symbols[i].symbol))
         {
             return _symbols[i].addr;
+        }
+    }
+
+    return -1;
+}
+
+int Tables::GetSymbolValue(std::string symbol)
+{
+    if (symbol.back() == ',')
+        symbol.pop_back();
+
+    for (int i = 0; i < _symbols.size(); i++)
+    {
+        if (boost::iequals(symbol, _symbols[i].symbol))
+        {
+            return _symbols[i].value;
         }
     }
 
@@ -55,8 +71,20 @@ bool Tables::IsSymbolConst(std::string symbol)
             return _symbols[i].isConst;
         }
     }
+}
 
-    return false;
+bool Tables::IsSymbolExtern(std::string symbol)
+{
+    if (symbol.back() == ',')
+        symbol.pop_back();
+
+    for (int i = 0; i < _symbols.size(); i++)
+    {
+        if (boost::iequals(symbol, _symbols[i].symbol))
+        {
+            return _symbols[i].isExtern;
+        }
+    }
 }
 
 bool Tables::IsSymbolInSymbolTable(std::string symbol)
@@ -122,39 +150,5 @@ bool Tables::IsSymbolInDefinitionTable(std::string symbol)
 
 void Tables::AddElementUseTable(std::string symbol, int addr)
 {
-    if (IsSymbolInUseTable(symbol))
-    {
-        std::cout << "Simbolo ja esta na tabela!" << std::endl;
-        return;
-    }
     _use.push_back(UseTable{symbol, addr});
-}
-int Tables::GetUseAddr(std::string symbol)
-{
-    if (symbol.back() == ',')
-        symbol.pop_back();
-
-    for (int i = 0; i < _use.size(); i++)
-    {
-        if (boost::iequals(symbol, _use[i].symbol))
-        {
-            return _use[i].addr;
-        }
-    }
-
-    return 0;
-}
-
-bool Tables::IsSymbolInUseTable(std::string symbol)
-{
-    if (symbol.back() == ',')
-        symbol.pop_back();
-
-    for (int i = 0; i < _use.size(); i++)
-    {
-        if (boost::iequals(symbol, _use[i].symbol))
-            return true;
-    }
-
-    return false;
 }

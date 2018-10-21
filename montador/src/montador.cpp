@@ -27,8 +27,10 @@ int main(int argc, char *argv[])
     Processing *proc = new Processing(argv[1], _tables, _analizer);
     if (proc->isFileOpen())
     {
-        proc->FirstPass();
+        if (proc->FirstPass())
+            proc->SecondPass();
     }
+    proc->CloseFiles();
 
     return 0;
 }

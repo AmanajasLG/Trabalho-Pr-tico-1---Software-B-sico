@@ -23,42 +23,43 @@ void PreProcessing::PreProcess()
     while (!file_asm.eof())
     {
         std::getline(file_asm, line);
-        boost::split(words, line, [](char c) { return c == ' ' || c == '\n' || c == '\0'; });
+        boost::split(words, line, [](char c) { return c == ' ' || c == '\n' || c == '\0' || c == '\t' || c == '\r'; });
 
-        if (analizer.isLable(words[0]) && boost::iequals(words[1], "EQU"))
-        {
-            std::string lable = words[0];
-            lable.pop_back();
-            tables.AddElementDefinitionTable(lable, std::stoi(words[2]));
-        }
-        else if (words[0] != "\n")
+        if (words[0] != "\n")
         {
             for (int i = 0; i < words.size(); i++)
             {
-                if (analizer.isComment(words[i]))
+                if (analizer.IsLable(words[i]) && boost::iequals(words[i + 1], "EQU"))
+                {
+                    std::string lable = words[i];
+                    lable.pop_back();
+                    tables.AddElementSymbolTable(lable, std::stoi(words[i + 2]), "", false, (std::stoi(words[i + 2]) == 0));
+                    break;
+                }
+                else if (analizer.IsComment(words[i]))
                 {
                     break;
                 }
-                else if (boost::iequals(words[i], "IF") && i < 2)
+                else if (boost::iequals(words[i], "IF"))
                 {
                     if (i != 0)
                     {
                         for (int j = 0; j < i; j++)
                         {
-                            write_line += words[j] + " ";
+                            if (words[j].find_first_not_of(" ") != (words[j].size() - 1))
+                                write_line += words[j] + " ";
                         }
                     }
 
-                    if (!tables.IsSymbolInDefinitionTable(words[i + 1]) || tables.GetDefinitionVal(words[i + 1]) == 0)
+                    if (!tables.IsSymbolInSymbolTable(words[i + 1]) || tables.IsSymbolValueZero(words[i + 1]))
                     {
                         std::getline(file_asm, line);
                     }
                     break;
                 }
-                else if (words[i].find_first_not_of(" ") != words[i].size() - 1)
+                else if (words[i].find_first_not_of(" ") != (words[i].size() - 1))
                 {
-
-                    if (!tables.IsSymbolInDefinitionTable(words[i]))
+                    if (!tables.IsSymbolInSymbolTable(words[i]))
                     {
                         write_line += words[i] + " ";
                     }
@@ -66,21 +67,24 @@ void PreProcessing::PreProcess()
                     {
                         if (words[i].back() == ',')
                         {
-                            write_line += std::to_string(tables.GetDefinitionVal(words[i])) + ", ";
+                            write_line += std::to_string(tables.GetSymbolAddr(words[i])) + ", ";
                         }
                         else
                         {
-                            write_line += std::to_string(tables.GetDefinitionVal(words[i])) + " ";
+                            write_line += std::to_string(tables.GetSymbolAddr(words[i])) + " ";
                         }
                     }
+                }
+                else if (words[i].length() == 1 && words[i] != " ")
+                {
+                    write_line += words[i] + " ";
                 }
             }
         }
 
-        if (write_line != "")
+        if (write_line != "" && write_line != " ")
         {
             file_pre << write_line << "\n";
-            file_pre << std::flush;
         }
         words.clear();
         write_line = "";

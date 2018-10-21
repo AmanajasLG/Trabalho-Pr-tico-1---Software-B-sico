@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstring>
 #include <sstream>
+#include <boost/algorithm/string.hpp>
 
 #ifndef INSTRUCTIONANALIZER_H
 
@@ -40,6 +41,15 @@ class InstructionAnalizer
 
     void ReadDirectiveFile();
 
+    int GetDirectiveSize(std::string label)
+    {
+        for (int i = 0; i < _directive.size(); i++)
+        {
+            if (boost::iequals(_directive[i].name, label))
+                return _directive[i].size;
+        }
+    }
+
     /*
     * Formato arquivo instrucoes.txt
     * mnemônico - operandos - código - tamanho
@@ -55,7 +65,23 @@ class InstructionAnalizer
         }
     }
 
-    int InstructionOpNumber(std::string label);
+    int GetInstructionOpNumber(std::string label)
+    {
+        for (int i = 0; i < _instruction.size(); i++)
+        {
+            if (boost::iequals(_instruction[i].name, label))
+                return _instruction[i].op_number;
+        }
+    }
+
+    int GetInstructionSize(std::string label)
+    {
+        for (int i = 0; i < _instruction.size(); i++)
+        {
+            if (boost::iequals(_instruction[i].name, label))
+                return _instruction[i].size;
+        }
+    }
 
     void ReadInstructionFile();
 

@@ -6,6 +6,10 @@
 #include <sstream>
 
 #ifndef TABLES_H
+/*  
+*   Tabelas
+*   Classe que gera as tabelas necessarias - Uso, Definicoes e Simbolos
+*/
 #define TABLES_H
 
 class Tables
@@ -33,10 +37,11 @@ class Tables
     struct UseTable
     {
         std::string symbol;
-        int addr; //soma com o valor correspondente no ligador
+        int addr;
     };
 
   public:
+    /* Funcoes para gerenciar e retirar informacoes da tabela Simbolos */
     void AddElementSymbolTable(std::string symbol, int addr, std::string section = "TEXT", bool isVariable = false, int value = 0, bool isZero = false, bool isConst = false, bool isExtern = false, bool isVector = false, int vectorSize = 1);
     int GetSymbolAddr(std::string symbol);
     int GetSymbolValue(std::string symbol);
@@ -49,61 +54,18 @@ class Tables
     bool IsSymbolInSymbolTable(std::string symbol);
     std::string SymbolSection(std::string symbol);
 
+    /* Funcoes para gerenciar e retirar informacoes da tabela Definicoes */
     void AddElementDefinitionTable(std::string symbol, int addr);
     int GetDefinitionAddr(std::string symbol);
     std::string GetDefinitionSymbolName(int pos) { return _defs[pos].symbol; }
     bool IsSymbolInDefinitionTable(std::string symbol);
     int GetDefinitionTableSize() { return _defs.size(); }
 
+    /* Funcoes para gerenciar e retirar informacoes da tabela Uso */
     void AddElementUseTable(std::string symbol, int addr);
     int GetUseAddr(int pos) { return _use[pos].addr; }
     int GetUseTableSize() { return _use.size(); }
     std::string GetUseSymbolName(int pos) { return _use[pos].symbol; }
-
-    void ShowSymbolTable()
-    {
-        std::cout << "SYMBOL TABLE \n\n"
-                  << std::endl;
-        for (int i = 0; i < _symbols.size(); i++)
-        {
-            std::cout << "Symbol: " << _symbols[i].symbol << std::endl;
-            std::cout << "Addr: " << _symbols[i].addr << std::endl;
-            std::cout << "Section: " << _symbols[i].section << std::endl;
-            std::cout << "IsVariable: " << _symbols[i].isVariable << std::endl;
-            std::cout << "Value: " << _symbols[i].value << std::endl;
-            std::cout << "IsConst: " << _symbols[i].isConst << std::endl;
-            std::cout << "IsZero: " << _symbols[i].isZero << std::endl;
-            std::cout << "IsExtern: " << _symbols[i].isExtern << std::endl;
-            std::cout << "IsVector: " << _symbols[i].isVector << std::endl;
-            std::cout << "VectorSize: " << _symbols[i].vectorSize << std::endl;
-            std::cout << "\n"
-                      << std::endl;
-        }
-    }
-    void ShowDefinitionTable()
-    {
-        std::cout << "DEFINITION TABLE \n\n"
-                  << std::endl;
-        for (int i = 0; i < _defs.size(); i++)
-        {
-            std::cout << "Symbol: " << _defs[i].symbol << std::endl;
-            std::cout << "Addr: " << _defs[i].addr << std::endl;
-            std::cout << "\n"
-                      << std::endl;
-        }
-    }
-    void ShowUseTable()
-    {
-        std::cout << "USE TABLE \n\n"
-                  << std::endl;
-        for (int i = 0; i < _use.size(); i++)
-        {
-            std::cout << "Symbol: " << _use[i].symbol << std::endl;
-            std::cout << "Addr: " << _use[i].addr << std::endl;
-            std::cout << "\n"
-                      << std::endl;
-        }
-    }
 
   private:
     std::vector<SymbolTable> _symbols;

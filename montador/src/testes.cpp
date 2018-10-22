@@ -2,6 +2,7 @@
 #include <boost/algorithm/string.hpp>
 #include <ctype.h>
 
+/* Verifica se o arquivo eh modulo */
 void Tests::TestIsModule(std::string firstLine)
 {
     std::vector<std::string> words;
@@ -11,6 +12,7 @@ void Tests::TestIsModule(std::string firstLine)
         isModule = true;
 }
 
+/* Verifica se o rotulo nao foi definido */
 bool Tests::MissingDeclarationOrLable(std::vector<std::string> words)
 {
 
@@ -41,31 +43,37 @@ bool Tests::MissingDeclarationOrLable(std::vector<std::string> words)
     return false;
 }
 
+/* Verifica se o rotulo ja foi definido antes */
 bool Tests::RepitedDeclarationOrLable(std::string lable)
 {
     return tables->IsSymbolInSymbolTable(lable);
 }
 
+/* Verifica se o pulo esta sendo feito para um rotulo indefinido */
 bool Tests::JumpToInvalidLable(std::string lable)
 {
     return !tables->IsSymbolInSymbolTable(lable);
 }
 
+/* Verifica se o pulo esta sendo feito para uma sessao diferente de TEXT */
 bool Tests::JumpToWrongSection(std::string lable)
 {
     return !boost::iequals(tables->SymbolSection(lable), "TEXT");
 }
 
+/* Verifica se a diretiva eh invalida */
 bool Tests::IsInvalidDirective(std::string lable)
 {
     return !analizer.IsDirective(lable);
 }
 
+/* Verifica se a instrucao eh invalida */
 bool Tests::IsInvalidInstruction(std::string lable)
 {
     return !analizer.IsInstruction(lable);
 }
 
+/* Verifica se a instrucao ou diretiva ta na sessao errada */
 bool Tests::DirectiveOrInstructionInWrongSection(std::string lable)
 {
     if (isInBssSection)
@@ -95,11 +103,13 @@ bool Tests::DirectiveOrInstructionInWrongSection(std::string lable)
     }
 }
 
+/* Verifica se a divisao eh por zero */
 bool Tests::IsDivisionByZero(std::string dividend)
 {
     return boost::iequals(dividend, "0") || (tables->IsSymbolInSymbolTable(dividend) && tables->IsSymbolValueZero(dividend));
 }
 
+/* Verifica se o token eh invalido */
 bool Tests::IsInvalidToken(std::string token)
 {
     if (IsNumber(token) && !isInTextSection)
@@ -127,6 +137,7 @@ bool Tests::IsInvalidToken(std::string token)
     return false;
 }
 
+/* Verifica se tem dois rotulos na mesma linha */
 bool Tests::TwoLablesInLine(std::vector<std::string> words)
 {
     bool hasLabel = false;
@@ -139,13 +150,13 @@ bool Tests::TwoLablesInLine(std::vector<std::string> words)
         }
         else if (analizer.IsLable(words[i]) && hasLabel)
         {
-            std::cout << "2 LABLES NA LINHA - ERRO SINTATICO" << std::endl;
             return true;
         }
     }
     return false;
 }
 
+/* Verifica se o tipo de argumento passado com a instrucao/diretiva eh valido */
 bool Tests::IsInvalidArgumentType(std::vector<std::string> words)
 {
 
@@ -202,11 +213,13 @@ bool Tests::IsInvalidArgumentType(std::vector<std::string> words)
     }
 }
 
+/* Verifica se o programa esta tentando mudar um valor constante */
 bool Tests::IsChangingConstValue(std::string arg)
 {
     return tables->IsSymbolConst(arg);
 }
 
+/* Define a sessao e verifica se a sessao tem nome valido */
 bool Tests::DefineSection(std::string section)
 {
     if (boost::iequals(section, "TEXT"))
@@ -248,6 +261,7 @@ bool Tests::DefineSection(std::string section)
     }
 }
 
+/* Verifica se a instrucao/diretiva tem um numero errado de operandos */
 bool Tests::HasWrongOpNumber(std::vector<std::string> words)
 {
     if (analizer.IsLable(words[0]))
@@ -284,6 +298,7 @@ bool Tests::HasWrongOpNumber(std::vector<std::string> words)
     }
 }
 
+/* Verifica os erros de primeira passagem */
 bool Tests::ErrorFirstPass(std::vector<std::string> words)
 {
 
@@ -319,6 +334,7 @@ bool Tests::ErrorFirstPass(std::vector<std::string> words)
     return false;
 }
 
+/* Verifica os erros de segunda passagem */
 bool Tests::ErrorSecondPass(std::vector<std::string> words)
 {
     if (words.size() == 0)

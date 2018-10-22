@@ -1,6 +1,6 @@
 #include "../include/junta_arquivos.hpp"
 
-// Funcao verifica se todos os arquivos incluidos pelo usuario podem ser abertos
+/* Funcao verifica se todos os arquivos incluidos pelo usuario podem ser abertos */
 bool JoinFiles::IsValidFile()
 {
     for (int i = 0; i < files_name.size(); i++)
@@ -15,12 +15,12 @@ bool JoinFiles::IsValidFile()
         }
     }
 
-    // Se puder ela ja gera  o arquivo .e
+    /* Se puder ela ja gera  o arquivo .e */
     file_e.open(files_name[0] + ".e", std::ofstream::out);
     return true;
 }
 
-// Funcao para juntar os arquivos
+/* Funcao para juntar os arquivos */
 bool JoinFiles::Join()
 {
     int positionCounter = 0;
@@ -32,11 +32,11 @@ bool JoinFiles::Join()
 
     bool firstLine = true;
 
-    //Para cada arquivo:
+    /* Para cada arquivo: */
     for (int i = 0; i < files_name.size(); i++)
     {
         cor_factor = positionCounter;
-        //Gera uma tabela de uso e uma tabela de definicoes geral e tambem uma tabela de enderecos que sao relativos
+        /* Gera uma tabela de uso e uma tabela de definicoes geral e tambem uma tabela de enderecos que sao relativos */
         BuildTables(i, cor_factor);
         file.open(files_name[i] + ".obj");
 
@@ -54,10 +54,10 @@ bool JoinFiles::Join()
 
             if (firstLine)
             {
-                // Verifica se o arquivo e modulo
+                /* Verifica se o arquivo e modulo */
                 if (!IsNumber(words[0]))
                 {
-                    // Se for ativa a flag que espera chegar na sessao code para seguir
+                    /*  Se for ativa a flag que espera chegar na sessao code para seguir */
                     waitCode = true;
                     continue;
                 }

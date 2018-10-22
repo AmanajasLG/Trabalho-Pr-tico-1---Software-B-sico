@@ -5,7 +5,7 @@
 
 /*
 *   Processamento 
-*   Gera arquivo .obj
+*   Analisa erros e gera o arquivo .obj
 */
 
 #define PROCESSING_H

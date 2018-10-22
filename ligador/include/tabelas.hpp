@@ -70,7 +70,6 @@ class Tables
             relative = true;
         }
     }
-
     bool IsTableUse() { return tableUse; }
     bool IsTableDefinition() { return tableDefinition; }
     bool IsRelative() { return relative; }

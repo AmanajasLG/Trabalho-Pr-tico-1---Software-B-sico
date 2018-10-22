@@ -7,7 +7,11 @@
 #include <boost/algorithm/string.hpp>
 
 #ifndef INSTRUCTIONANALIZER_H
-
+/*  
+*   AnalisadorDeIstrucoes
+*   Classe para identificar, analisar e retornar informacoes de 
+*   instrucoes, diretivas, rotulos e comentarios. 
+*/
 #define INSTRUCTIONANALIZER_H
 
 class InstructionAnalizer
@@ -41,6 +45,7 @@ class InstructionAnalizer
 
     void ReadDirectiveFile();
 
+    /* Retorna o tamanho da diretiva */
     int GetDirectiveSize(std::string label)
     {
         for (int i = 0; i < _directive.size(); i++)
@@ -50,6 +55,7 @@ class InstructionAnalizer
         }
     }
 
+    /* Retorna o numero de operandos da diretiva */
     int GetDirectiveOpNumber(std::string label)
     {
         for (int i = 0; i < _directive.size(); i++)
@@ -65,6 +71,7 @@ class InstructionAnalizer
     */
     bool IsInstruction(std::string label);
 
+    /* Retorna o codigo da instrucao */
     int GetInstructionOpCode(std::string label)
     {
         for (int i = 0; i < _instruction.size(); i++)
@@ -74,6 +81,7 @@ class InstructionAnalizer
         }
     }
 
+    /* Retorna o numero de operandos da instrucao */
     int GetInstructionOpNumber(std::string label)
     {
         for (int i = 0; i < _instruction.size(); i++)
@@ -83,6 +91,7 @@ class InstructionAnalizer
         }
     }
 
+    /* Retorna o tamanho da instrucao */
     int GetInstructionSize(std::string label)
     {
         for (int i = 0; i < _instruction.size(); i++)
@@ -94,6 +103,7 @@ class InstructionAnalizer
 
     void ReadInstructionFile();
 
+    /* Verifica de o token passado eh um rotulo */
     bool IsLable(std::string lable)
     {
         if (lable.back() == ':')
@@ -102,6 +112,7 @@ class InstructionAnalizer
         return false;
     }
 
+    /* Verifica de o token passado eh um comentario */
     bool IsComment(std::string lable)
     {
         if (lable.front() == ';')

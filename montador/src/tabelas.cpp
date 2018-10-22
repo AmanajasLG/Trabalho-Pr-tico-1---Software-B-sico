@@ -13,6 +13,7 @@ void Tables::AddElementSymbolTable(std::string symbol, int addr, std::string sec
     }
     _symbols.push_back(SymbolTable{symbol, addr, section, isVariable, value, isZero, isConst, isExtern, isVector, vectorSize});
 }
+
 int Tables::GetSymbolAddr(std::string symbol)
 {
     if (symbol.back() == ',')

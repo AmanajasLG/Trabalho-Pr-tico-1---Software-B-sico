@@ -2,6 +2,10 @@
 #include "../include/tabelas.hpp"
 
 #ifndef TESTS_H
+/*  
+*   Testes
+*   Classe responsavel por verificar se o codigo eh valido e pode ser compilado
+*/
 #define TESTS_H
 
 class Tests
@@ -9,6 +13,7 @@ class Tests
 public:
   Tests(InstructionAnalizer analizer, Tables *tables) : analizer(analizer), tables(tables) {}
 
+  /* Testes de verificacao de codigo */
   void TestIsModule(std::string firstLine);
 
   bool MissingDeclarationOrLable(std::vector<std::string> words);
@@ -26,6 +31,7 @@ public:
   bool HasWrongOpNumber(std::vector<std::string> words);
   bool IsInVectorRange();
 
+  /* Funcoes destinadas a identificacao da sessao atual */
   bool DefineSection(std::string section);
   bool IsModule() { return isModule; }
   std::string GetSection()
@@ -60,6 +66,7 @@ public:
 
   bool IsNumber(std::string word) { return word.find_first_not_of("-0123456789,") == std::string::npos; }
 
+  /* Funcoes para executar testes especificos em cada uma das passagens */
   bool ErrorFirstPass(std::vector<std::string> words);
   bool ErrorSecondPass(std::vector<std::string> words);
 

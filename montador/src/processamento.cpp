@@ -11,7 +11,7 @@ bool Processing::isFileOpen()
         return false;
     }
 
-    file_obj.open(file_name + ".obj", std::ofstream::out);
+    file_obj.open("../ligador/" + file_name + ".obj", std::ofstream::out);
     return true;
 }
 

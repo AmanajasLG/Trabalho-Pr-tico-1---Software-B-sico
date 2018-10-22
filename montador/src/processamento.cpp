@@ -28,7 +28,7 @@ bool Processing::FirstPass()
     while (!file_pre.eof())
     {
         std::getline(file_pre, line);
-        boost::split(words, line, [](char c) { return c == ' ' || c == '\n'; });
+        boost::split(words, line, [](char c) { return c == ' ' || c == '\n' || c == '\0'; });
 
         for (int i = 0; i < words.size(); i++)
         {
@@ -148,9 +148,6 @@ bool Processing::SecondPass()
         if (words.size() == 0)
             continue;
 
-        std::cout << "TAMANHO MEMORIA: " << memory->GetMemorySize() << std::endl;
-        std::cout << "POSICAO: " << positionCounter << std::endl;
-
         if (boost::iequals(words[0], "SECTION") && tests.DefineSection(words[1]))
         {
             std::cout << "Linha " << lineCounter << std::endl;
@@ -243,7 +240,6 @@ bool Processing::SecondPass()
 
         while (i <= positionCounter)
         {
-            std::cout << "ENTRO" << std::endl;
 
             if (analizer.IsInstruction(words[j]))
             {
@@ -306,7 +302,6 @@ bool Processing::SecondPass()
             {
                 loopsCount++;
             }
-            std::cout << "SAIU" << std::endl;
 
             if (loopsCount == 3)
                 break;

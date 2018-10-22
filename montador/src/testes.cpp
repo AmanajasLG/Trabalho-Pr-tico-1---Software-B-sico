@@ -120,7 +120,6 @@ bool Tests::IsInvalidToken(std::string token)
     {
         if (!isalnum(token[i]) && token[i] != '_')
         {
-            std::cout << "TOKEN INVALIDO - ERRO LEXICO" << std::endl;
             return true;
         }
     }
@@ -255,8 +254,6 @@ bool Tests::HasWrongOpNumber(std::vector<std::string> words)
     if (analizer.IsLable(words[0]))
         words.erase(words.begin());
 
-    std::cout << "VOLTA PRA CA 3!" << std::endl;
-
     if (analizer.IsInstruction(words[0]))
     {
         if (words.size() == 1)
@@ -328,8 +325,6 @@ bool Tests::ErrorSecondPass(std::vector<std::string> words)
     if (words.size() == 0)
         return false;
 
-    std::cout << "TAMANHO = " << words.size() << std::endl;
-
     for (int i = 0; i < words.size(); i++)
     {
 
@@ -370,23 +365,19 @@ bool Tests::ErrorSecondPass(std::vector<std::string> words)
 
     if (MissingDeclarationOrLable(words))
     {
-
         std::cout << "Erro Sintatico - Declaracao ou Rotulo ausente!" << std::endl;
         return true;
     }
     else if (IsInvalidArgumentType(words))
     {
-        std::cout << "VOLTA PRA CA 2!" << std::endl;
         std::cout << "Erro Sintatico - Tipo de argumento invalido!" << std::endl;
         return true;
     }
     else if (HasWrongOpNumber(words))
     {
-        std::cout << "VOLTA PRA CA 3!" << std::endl;
         std::cout << "Erro Sintatico - Numero invalido de operandos!" << std::endl;
         return true;
     }
-    std::cout << "VOLTA PRA CA 4!" << std::endl;
 
     return false;
 }

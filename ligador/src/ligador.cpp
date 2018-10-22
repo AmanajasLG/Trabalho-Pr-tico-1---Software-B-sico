@@ -4,6 +4,7 @@
 
 int main(int argc, char *argv[])
 {
+    /* Verifica se o numero de argumentos e invalido */
     if (argc > 5)
     {
         std::cout << "ERRO - Numero invalido de argumentos" << std::endl;

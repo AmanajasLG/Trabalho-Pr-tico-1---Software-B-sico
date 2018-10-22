@@ -7,6 +7,10 @@
 #include <boost/algorithm/string.hpp>
 
 #ifndef TABLES_H
+/*  
+*   Tabelas
+*   Classe que gera as tabelas necessarias - Uso, Definicoes e Relativos 
+*/
 #define TABLES_H
 
 class Tables
@@ -20,36 +24,31 @@ class Tables
     struct UseTable
     {
         std::string symbol;
-        int addr; //soma com o valor correspondente no ligador
+        int addr;
     };
 
   public:
+    /* Funcoes para gerenciar e retirar informacoes da tabela Definicoes */
     void AddElementDefinitionTable(std::string symbol, int addr);
     int GetDefinitionAddr(std::string symbol);
     std::string GetDefinitionSymbolName(int pos) { return _defs[pos].symbol; }
     bool IsSymbolInDefinitionTable(std::string symbol);
     int GetDefinitionTableSize() { return _defs.size(); }
 
+    /* Funcoes para gerenciar e retirar informacoes da tabela Uso */
     void AddElementUseTable(std::string symbol, int addr);
     int GetUseAddr(int pos) { return _use[pos].addr; }
     int GetUseTableSize() { return _use.size(); }
     std::string GetUseSymbolName(int pos) { return _use[pos].symbol; }
     int IsAddrInUseTable(int addr);
 
-    void AddRelativeAddr(int addr)
-    {
-        _relatives.push_back(addr);
-    }
-    int GetRelativeAddr(int pos)
-    {
-        return _relatives[pos];
-    }
-    int GetRelativeSize()
-    {
-        return _relatives.size();
-    }
+    /* Funcoes para gerenciar e retirar informacoes da tabela Relativos */
+    void AddRelativeAddr(int addr) { _relatives.push_back(addr); }
+    int GetRelativeAddr(int pos) { return _relatives[pos]; }
+    int GetRelativeSize() { return _relatives.size(); }
     bool IsAddrInRelative(int addr);
 
+    /* Funcoes destinadas a identificacao da sessao atual */
     void SetTable(std::string table)
     {
         if (table == "USE")
@@ -75,31 +74,6 @@ class Tables
     bool IsTableUse() { return tableUse; }
     bool IsTableDefinition() { return tableDefinition; }
     bool IsRelative() { return relative; }
-
-    void ShowDefinitionTable()
-    {
-        std::cout << "DEFINITION TABLE \n\n"
-                  << std::endl;
-        for (int i = 0; i < _defs.size(); i++)
-        {
-            std::cout << "Symbol: " << _defs[i].symbol << std::endl;
-            std::cout << "Addr: " << _defs[i].addr << std::endl;
-            std::cout << "\n"
-                      << std::endl;
-        }
-    }
-    void ShowUseTable()
-    {
-        std::cout << "USE TABLE \n\n"
-                  << std::endl;
-        for (int i = 0; i < _use.size(); i++)
-        {
-            std::cout << "Symbol: " << _use[i].symbol << std::endl;
-            std::cout << "Addr: " << _use[i].addr << std::endl;
-            std::cout << "\n"
-                      << std::endl;
-        }
-    }
 
   private:
     std::vector<DefinitionTable> _defs;

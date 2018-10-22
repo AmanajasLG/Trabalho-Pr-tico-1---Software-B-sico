@@ -2,7 +2,11 @@
 #include "../include/memoria.hpp"
 
 #ifndef JOINFILES_H
-
+/*
+*   JuntaArquivos
+*   Classe que pega os arquivos inseridos pelo usuário, 
+*   junta e gera o arquivo .e
+*/
 #define JOINFILES_H
 
 class JoinFiles
@@ -16,7 +20,7 @@ class JoinFiles
     void BuildTables(int file_pos, int cor_factor);
 
     void WriteEFile();
-
+    
     void CloseFiles()
     {
         file_e.close();

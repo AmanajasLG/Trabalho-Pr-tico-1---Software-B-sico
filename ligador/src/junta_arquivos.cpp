@@ -1,5 +1,6 @@
 #include "../include/junta_arquivos.hpp"
 
+// Funcao verifica se todos os arquivos incluidos pelo usuario podem ser abertos
 bool JoinFiles::IsValidFile()
 {
     for (int i = 0; i < files_name.size(); i++)
@@ -14,10 +15,12 @@ bool JoinFiles::IsValidFile()
         }
     }
 
+    // Se puder ela ja gera  o arquivo .e
     file_e.open(files_name[0] + ".e", std::ofstream::out);
     return true;
 }
 
+// Funcao para juntar os arquivos
 bool JoinFiles::Join()
 {
     int positionCounter = 0;
@@ -29,9 +32,11 @@ bool JoinFiles::Join()
 
     bool firstLine = true;
 
+    //Para cada arquivo:
     for (int i = 0; i < files_name.size(); i++)
     {
         cor_factor = positionCounter;
+        //Gera uma tabela de uso e uma tabela de definicoes geral e tambem uma tabela de enderecos que sao relativos
         BuildTables(i, cor_factor);
         file.open(files_name[i] + ".obj");
 
@@ -49,8 +54,10 @@ bool JoinFiles::Join()
 
             if (firstLine)
             {
+                // Verifica se o arquivo e modulo
                 if (!IsNumber(words[0]))
                 {
+                    // Se for ativa a flag que espera chegar na sessao code para seguir
                     waitCode = true;
                     continue;
                 }
@@ -65,37 +72,39 @@ bool JoinFiles::Join()
                 }
             }
 
+            /* Soma o tamanho do vetor com o contador de posicoes ja que todos os elementos sao validos para a contagem */
             positionCounter += words.size();
 
             int j = 0, i = memory.GetMemorySize();
 
             while (i < positionCounter)
             {
-                std::cout << "ENTRO AQUI" << std::endl;
+                /*Se o endereco estiver na tabela de uso */
                 if (tables.IsAddrInUseTable(i) != -1)
                 {
-                    std::cout << "O PROBLEMA É A PORRA DO NOME DA VAR!!POS: " << tables.IsAddrInUseTable(i) << std::endl;
-                    std::cout << "NOME DA VAR: " << tables.GetUseSymbolName(tables.IsAddrInUseTable(i)) << std::endl;
+                    /* Ele varifica se ele ja esta definido na tabela de definicoes */
                     if (!tables.IsSymbolInDefinitionTable(tables.GetUseSymbolName(tables.IsAddrInUseTable(i))))
                     {
+                        /*  Caso nao ele coloca  o mesmo valor do arquivo e salva o endereco da memoria que precisa ser madificado depois  */
                         memory.IncludeMemorySpace(std::stoi(words[j]));
                         varNotDefined.push_back(i);
                     }
                     else
                     {
+                        /* Se estiver ele soma o valor contido na tabela com o contido na posicao em questao*/
                         memory.IncludeMemorySpace(tables.GetDefinitionAddr(tables.GetUseSymbolName(tables.IsAddrInUseTable(i))) + std::stoi(words[j]));
                     }
                     i++;
                 }
+                /*Se o endereco for relativo ele salva seu valor + o fator de correcao */
                 else if (tables.IsAddrInRelative(i))
                 {
-                    std::cout << "agora aqui fdp! " << std::endl;
                     memory.IncludeMemorySpace(std::stoi(words[j]) + cor_factor);
                     i++;
                 }
+                /* Caso contrario ele apenas salva o valor normal */
                 else
                 {
-                    std::cout << "VAI TOMA NO SEU CU" << std::endl;
                     memory.IncludeMemorySpace(std::stoi(words[j]));
                     i++;
                 }
@@ -103,22 +112,20 @@ bool JoinFiles::Join()
                 j++;
             }
         }
-        std::cout << "VARIAVEL NAO DEFINIDA: " << varNotDefined.size() << std::endl;
-        ;
         firstLine = true;
         file.close();
     }
 
+    /*Varifica se ha algum elemento que nao foi definido e muda o valor da posicao*/
     for (int i = 0; i < varNotDefined.size(); i++)
     {
         memory.ChangeMemorySpaceValue(varNotDefined[i], tables.GetDefinitionAddr(tables.GetUseSymbolName(tables.IsAddrInUseTable(varNotDefined[i]))) + memory.GetMemoryPositionValue(varNotDefined[i]));
     }
 
-    memory.ShowMemory();
-
     WriteEFile();
 }
 
+/*Funcao para construir as tabelas*/
 void JoinFiles::BuildTables(int file_pos, int cor_factor)
 {
     std::string line = "";
@@ -146,6 +153,8 @@ void JoinFiles::BuildTables(int file_pos, int cor_factor)
 
         if (firstLine)
         {
+            /* Verifica se o arquivo aberto nao é um modulo e se assim for ele sai do 
+            arquivo ja que nao ha tabelas para avaliar */
             if (IsNumber(words[0]))
             {
                 break;
@@ -154,10 +163,12 @@ void JoinFiles::BuildTables(int file_pos, int cor_factor)
             firstLine = false;
         }
 
+        /* Chegando na sessao CODE ele sai */
         if (words[0] == "CODE")
         {
             break;
         }
+        /* Para salvar em cada tabela sao usadas as variaveis de Table para indicar em qual sessao o leitor esta */
         else if (words[0] == "TABLE")
         {
             tables.SetTable(words[1]);
@@ -186,16 +197,10 @@ void JoinFiles::BuildTables(int file_pos, int cor_factor)
         }
     }
 
-    std::cout << "TABLE RELATIVE" << std::endl;
-    for (int i = 0; i < tables.GetRelativeSize(); i++)
-        std::cout << tables.GetRelativeAddr(i) << std::endl;
-
-    tables.ShowDefinitionTable();
-    tables.ShowUseTable();
-
     file.close();
 }
 
+/* Funcao que escreve o arquivo .e */
 void JoinFiles::WriteEFile()
 {
     for (int i = 0; i < memory.GetMemorySize(); i++)

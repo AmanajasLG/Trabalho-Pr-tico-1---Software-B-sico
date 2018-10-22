@@ -1,0 +1,125 @@
+1) declarações e rótulos ausentes;
+
+Tem que ver isso na segunda passagem, na parte: 
+	"Se número e tipo dos operandos está correto então gera código objeto conforme formato da instrução
+	Senão: Erro, operando inválido"
+	
+O tipo do operando depende de cada instrução:
+	ADD, SUB, MULT, DIV: só aceita CONST. Por exemplo:
+	
+		DIV		DOIS	;DOIS tem que ser uma CONST.
+	
+		obs: DIV não pode dividir por zero (erro: divisão por zero (para constante);
+		
+	JMP, JMPN, JMPP, JMPZ: só aceita rótulos, e tem que estar dentro da seção certa.
+		Obs: Não pode jumpar pra outra seção (erro: pulo para seção errada). Ex:
+		
+		JMPP	OLD_DATA	;sendo que OLD_DATA está em SECTION BSS (o programa fica em SECTION TEXT).
+		
+	COPY, OUTPUT, STORE, STOP: não achei nada específico pra esses aqui, fora o número de operandos. 
+	
+2) declarações e rótulos repetidos;
+- easy -> rótulo já existe e a pessoa tenta redefinir.
+Ex:
+	L1: DIV DOIS
+	L1: SUB DOIS
+
+3) pulo para rótulos inválidos;
+- Se o rótulo não foi definido, não tem como jumpar pra lá.
+Ex:
+	JMP TRABALHO1chato	;sendo que TRAB1chato não foi definido
+
+4) pulo para seção errada;
+Ex:
+	...
+	JMPP OLD_DATA
+	STOP
+	SECTION DATA
+	DOIS: CONST 2
+	SECTION BSS
+	OLD_DATA: SPACE
+
+5) diretivas inválidas;
+- easy -> se não está na tabela de diretivas, é inválida.
+
+6) instruções inválidas;
+- easy -> se não está na tabela de instruções, é inválida.
+
+7) diretivas ou instruções na seção errada;
+SECTION TEXT
+	Só pode ter: ADD, SUB, MULT, DIV, JMP, JMPN, JMPP, JMPZ, COPY, LOAD, STORE, INPUT, OUTPUT, STOP.
+		CONST e SPACE não!
+SECTION DATA
+	Só pode ter: declarações de CONST
+SECTION BSS
+	Só pode ter: declarações de SPACE
+
+8) divisão por zero (para constante);
+- easy -> verificar se a CONST que a pessoa está dividindo é 0.
+
+9) instruções com a quantidade de operando inválida;
+- easy -> só contar de acordo com a tabela de instruções.
+
+10) tokens inválidos;
+- O que é um token? kkkk
+- Se for intrução ou diretiva, é easy.
+
+11) dois rótulos na mesma linha;
+- Se forem duas declarações de rótulo:
+	Verificar se há duas declarações com ":" na mesma linha?
+	
+12) seção TEXT faltante;
+- verificar a existência de SECTION TEXT, só isso
+
+13) seção inválida;
+- verificar se está escrito algo além de
+	SECTION TEXT
+	SECTION DATA
+	SECTION BSS
+	
+	Ex: SECTION TRAB1
+
+14) tipo de argumento inválido;
+- já vimos isso no erro 1).
+
+15) modificação de um valor constante;
+- se a pessoa tentar modificar na memória um lugar em que esteja uma CONST, não pode.
+
+16) A diretiva CONST deve aceitar números positivos e negativos (inteiros e hexadecimal);
+- Não pode colocar letras, rótulos etc. na CONST. Só números.
+Ex:
+	DOIS: CONST TRAB1	; tem que gerar erro.
+
+17) Deve ser possível trabalhar com vetores (SPACE com operando, e usar operações do tipo: LABEL + Número)
+- SPACE só pode receber números positivos!!!
+Ex:
+	NEW_DATA: SPACE -3	; tem que gerar erro.
+	NEW_DATA: SPACE TRAB1	; tem que gerar erro.
+	
+	NEW_DATA: SPACE 5	; CORRETO.
+	
+	LOAD NEW_DATA + 2	; TEM QUE FUNCIONAR.
+	LOAD NEW_DATA + CONSTx	; NÃO PRECISA IMPLEMENTAR
+	
+18) O comando COPY deve utilizar uma vírgula e um espaço entre os operandos (COPY A, B)
+Ex:
+	COPY NEW_DATA, OLD_DATA	;tá correto
+
+19) Poder criar um rótulo, dar quebra de linha e continuar a linha depois (o rótulo seria equivalente a linha seguinte)
+Ex:
+	L1: DIV DOIS
+	...	
+	
+	tem que ser igual a:
+	
+	L1:
+	DIV DOIS
+	...
+
+20) Os identificadores de variáveis e rótulos são limitados em 50 caracteres e seguem as regras comuns da linguagem C, sendo compostos por letras, números ou o caractere (underscore) e com a restrição de que o primeiro caractere não pode ser um número.
+Ex:
+	VARIAVELMUITOEXTENSAACIMADE50CARACTERESNAODEVEFUNCIONAR	; não deve funcionar: acima de 50 char
+	5VARIÁVEL	; não deve funcionar, começa com número
+	
+
+

@@ -26,7 +26,8 @@ int main(int argc, char *argv[])
     if (proc->isFileOpen())
     {
         if (proc->FirstPass())
-            proc->SecondPass();
+            if (proc->SecondPass())
+                std::cout << "Programa montado com sucesso!" << std::endl;
     }
     proc->CloseFiles();
 

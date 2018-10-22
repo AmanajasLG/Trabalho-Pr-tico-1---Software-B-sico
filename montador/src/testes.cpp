@@ -192,7 +192,6 @@ bool Tests::IsInvalidArgumentType(std::vector<std::string> words)
         {
             if (boost::iequals(words[i], "SPACE"))
             {
-                std::cout << "ENTRO AQUI" << std::endl;
                 return !(words.size() == 2) && (!IsNumber(words[i + 1]) || std::stoi(words[i + 1]) < 0);
             }
             else if (boost::iequals(words[i], "CONST"))

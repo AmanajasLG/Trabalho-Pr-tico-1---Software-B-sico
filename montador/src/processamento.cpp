@@ -314,11 +314,6 @@ bool Processing::SecondPass()
         lineCounter++;
     }
 
-    memory->ShowMemory();
-    tables->ShowDefinitionTable();
-    tables->ShowSymbolTable();
-    tables->ShowUseTable();
-
     WriteObjFile();
 
     return true;

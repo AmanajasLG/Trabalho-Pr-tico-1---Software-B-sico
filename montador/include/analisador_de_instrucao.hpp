@@ -50,6 +50,15 @@ class InstructionAnalizer
         }
     }
 
+    int GetDirectiveOpNumber(std::string label)
+    {
+        for (int i = 0; i < _directive.size(); i++)
+        {
+            if (boost::iequals(_directive[i].name, label))
+                return _directive[i].op_number;
+        }
+    }
+
     /*
     * Formato arquivo instrucoes.txt
     * mnemônico - operandos - código - tamanho

@@ -40,9 +40,12 @@ class Tables
     void AddElementSymbolTable(std::string symbol, int addr, std::string section = "TEXT", bool isVariable = false, int value = 0, bool isZero = false, bool isConst = false, bool isExtern = false, bool isVector = false, int vectorSize = 1);
     int GetSymbolAddr(std::string symbol);
     int GetSymbolValue(std::string symbol);
+    int GetVectorSize(std::string symbol);
     bool IsSymbolValueZero(std::string symbol);
     bool IsSymbolConst(std::string symbol);
     bool IsSymbolExtern(std::string symbol);
+    bool IsSymbolVariable(std::string symbol);
+    bool IsSymbolVector(std::string symbol);
     bool IsSymbolInSymbolTable(std::string symbol);
     std::string SymbolSection(std::string symbol);
 
@@ -67,9 +70,12 @@ class Tables
             std::cout << "Addr: " << _symbols[i].addr << std::endl;
             std::cout << "Section: " << _symbols[i].section << std::endl;
             std::cout << "IsVariable: " << _symbols[i].isVariable << std::endl;
+            std::cout << "Value: " << _symbols[i].value << std::endl;
             std::cout << "IsConst: " << _symbols[i].isConst << std::endl;
             std::cout << "IsZero: " << _symbols[i].isZero << std::endl;
             std::cout << "IsExtern: " << _symbols[i].isExtern << std::endl;
+            std::cout << "IsVector: " << _symbols[i].isVector << std::endl;
+            std::cout << "VectorSize: " << _symbols[i].vectorSize << std::endl;
             std::cout << "\n"
                       << std::endl;
         }

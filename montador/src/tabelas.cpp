@@ -45,6 +45,22 @@ int Tables::GetSymbolValue(std::string symbol)
     return -1;
 }
 
+int Tables::GetVectorSize(std::string symbol)
+{
+    if (symbol.back() == ',')
+        symbol.pop_back();
+
+    for (int i = 0; i < _symbols.size(); i++)
+    {
+        if (boost::iequals(symbol, _symbols[i].symbol))
+        {
+            return _symbols[i].vectorSize;
+        }
+    }
+
+    return -1;
+}
+
 bool Tables::IsSymbolValueZero(std::string symbol)
 {
     if (symbol.back() == ',')
@@ -83,6 +99,34 @@ bool Tables::IsSymbolExtern(std::string symbol)
         if (boost::iequals(symbol, _symbols[i].symbol))
         {
             return _symbols[i].isExtern;
+        }
+    }
+}
+
+bool Tables::IsSymbolVariable(std::string symbol)
+{
+    if (symbol.back() == ',')
+        symbol.pop_back();
+
+    for (int i = 0; i < _symbols.size(); i++)
+    {
+        if (boost::iequals(symbol, _symbols[i].symbol))
+        {
+            return _symbols[i].isVariable;
+        }
+    }
+}
+
+bool Tables::IsSymbolVector(std::string symbol)
+{
+    if (symbol.back() == ',')
+        symbol.pop_back();
+
+    for (int i = 0; i < _symbols.size(); i++)
+    {
+        if (boost::iequals(symbol, _symbols[i].symbol))
+        {
+            return _symbols[i].isVector;
         }
     }
 }

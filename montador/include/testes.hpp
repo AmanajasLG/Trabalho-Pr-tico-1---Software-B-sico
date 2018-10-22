@@ -1,6 +1,9 @@
 #include "../include/analisador_de_instrucao.hpp"
 #include "../include/tabelas.hpp"
 
+#ifndef TESTS_H
+#define TESTS_H
+
 class Tests
 {
 public:
@@ -8,7 +11,7 @@ public:
 
   void TestIsModule(std::string firstLine);
 
-  bool MissingDeclarationOrLable(std::string lable);
+  bool MissingDeclarationOrLable(std::vector<std::string> words);
   bool RepitedDeclarationOrLable(std::string lable);
   bool JumpToInvalidLable(std::string lable);
   bool JumpToWrongSection(std::string lable);
@@ -16,42 +19,58 @@ public:
   bool IsInvalidInstruction(std::string lable);
   bool DirectiveOrInstructionInWrongSection(std::string lable);
   bool IsDivisionByZero(std::string dividend);
-  bool HasIncorrectOpNumber(std::string line);
   bool IsInvalidToken(std::string token);
-  bool TwoLablesInLine(std::string line);
-  bool SectionTextMissing(std::ifstream file);
-  bool IsInvalidSection(std::string line);
-  bool IsInvalidArgumentType(std::string arg);
+  bool TwoLablesInLine(std::vector<std::string> words);
+  bool IsInvalidArgumentType(std::vector<std::string> words);
   bool IsChangingConstValue(std::string arg);
+  bool HasWrongOpNumber(std::vector<std::string> words);
+  bool IsInVectorRange();
 
+  bool DefineSection(std::string section);
   bool IsModule() { return isModule; }
-  void SetIsInTextSection()
+  std::string GetSection()
   {
-    isInTextSection = true;
-    isInBssSection = false;
-    isInDataSection = false;
+    if (isInTextSection)
+    {
+      return "TEXT";
+    }
+    else if (isInBssSection)
+    {
+      return "BSS";
+    }
+    else if (isInDataSection)
+    {
+      return "DATA";
+    }
+    else
+    {
+      return "";
+    }
   }
   bool IsInTextSection() { return isInTextSection; }
-  void SetIsInBssSection()
-  {
-    isInTextSection = false;
-    isInBssSection = true;
-    isInDataSection = false;
-  }
   bool IsInBssSection() { return isInBssSection; }
-  void SetIsInDataSection()
+  bool IsInDataSection() { return isInDataSection; }
+  void ResetSection()
   {
     isInTextSection = false;
+    passSectionText = false;
+    isInDataSection = false;
     isInBssSection = false;
-    isInDataSection = true;
   }
-  bool IsInDataSection() { return isInDataSection; }
+
+  bool IsNumber(std::string word) { return word.find_first_not_of("-0123456789,") == std::string::npos; }
+
+  bool ErrorFirstPass(std::vector<std::string> words);
+  bool ErrorSecondPass(std::vector<std::string> words);
 
 private:
   InstructionAnalizer analizer;
   Tables *tables;
   bool isModule = false;
   bool isInTextSection = false;
+  bool passSectionText = false;
   bool isInDataSection = false;
   bool isInBssSection = false;
 };
+
+#endif

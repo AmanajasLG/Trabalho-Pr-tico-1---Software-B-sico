@@ -13,8 +13,6 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    std::cout << argv[0] << ", " << argv[1] << std::endl;
-
     Tables *_tables = new Tables();
     InstructionAnalizer _analizer;
 

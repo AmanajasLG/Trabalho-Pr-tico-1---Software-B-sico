@@ -1,6 +1,7 @@
 #include "../include/processamento.hpp"
 #include <boost/algorithm/string.hpp>
 #include <limits>
+#include <sstream>
 
 bool Processing::isFileOpen()
 {
@@ -37,6 +38,21 @@ bool Processing::FirstPass()
             }
         }
 
+        if (words.size() == 0)
+            continue;
+
+        if (boost::iequals(words[0], "SECTION") && tests.DefineSection(words[1]))
+        {
+            std::cout << "Linha " << lineCounter << std::endl;
+            return false;
+        }
+
+        if (tests.ErrorFirstPass(words))
+        {
+            std::cout << "Linha " << lineCounter << std::endl;
+            return false;
+        }
+
         if (analizer.IsLable(words[0]))
         { // igual missing só q ao contrario
             if (tests.RepitedDeclarationOrLable(words[0]))
@@ -49,15 +65,15 @@ bool Processing::FirstPass()
             }
             else if (boost::iequals(words[1], "EXTERN"))
             {
-                tables->AddElementSymbolTable(words[0], positionCounter, tests.GetSection(), true, 0, false, false, true);
+                tables->AddElementSymbolTable(words[0], positionCounter, tests.GetSection(), false, 0, false, false, true);
             }
             else if (boost::iequals(words[1], "CONST"))
             {
-                tables->AddElementSymbolTable(words[0], positionCounter, tests.GetSection(), true, std::stoi(words[2]), (std::stoi(words[2]) == 0), true);
+                tables->AddElementSymbolTable(words[0], positionCounter, tests.GetSection(), true, std::stoi(words[2]), std::stoi(words[2]) == 0, true);
             }
             else if (boost::iequals(words[1], "SPACE"))
             {
-                if (words.size == 2)
+                if (words.size() == 2)
                     tables->AddElementSymbolTable(words[0], positionCounter, tests.GetSection(), true);
                 else
                     tables->AddElementSymbolTable(words[0], positionCounter, tests.GetSection(), true, 0, false, false, false, true, std::stoi(words[2]));
@@ -70,9 +86,6 @@ bool Processing::FirstPass()
 
         for (int i = 0; i < words.size(); i++)
         {
-            if (tests.IsInvalidToken(words[i]) && words[i].length() != 0)
-                return false;
-
             if (analizer.IsInstruction(words[i]))
             {
                 positionCounter += analizer.GetInstructionSize(words[i]);
@@ -96,6 +109,8 @@ bool Processing::FirstPass()
 
         lineCounter++;
     }
+
+    tests.ResetSection();
 
     return true;
 }
@@ -122,13 +137,30 @@ bool Processing::SecondPass()
             tests.TestIsModule(line);
         }
 
-        std::cout << line << std::endl;
         for (int i = 0; i < words.size(); i++)
         {
             if (words[i] == "")
             {
                 words.erase(words.begin() + i);
             }
+        }
+
+        if (words.size() == 0)
+            continue;
+
+        std::cout << "TAMANHO MEMORIA: " << memory->GetMemorySize() << std::endl;
+        std::cout << "POSICAO: " << positionCounter << std::endl;
+
+        if (boost::iequals(words[0], "SECTION") && tests.DefineSection(words[1]))
+        {
+            std::cout << "Linha " << lineCounter << std::endl;
+            return false;
+        }
+
+        if (tests.ErrorSecondPass(words))
+        {
+            std::cout << "Linha " << lineCounter << std::endl;
+            return false;
         }
 
         for (int i = 0; i < words.size(); i++)
@@ -171,13 +203,10 @@ bool Processing::SecondPass()
                     j++;
                 }
             }
-            std::cout << "\"" << words[i] << "\"" << std::endl;
         }
 
         if (boost::iequals(words[0], "PUBLIC") && tables->IsSymbolInSymbolTable(words[1]))
         {
-            if (tables->IsSymbolInDefinitionTable(words[1]))
-                return false;
 
             if (tables->IsSymbolConst(words[1]))
             {
@@ -191,11 +220,6 @@ bool Processing::SecondPass()
 
         for (int i = 0; i < words.size(); i++)
         {
-            /* if (tests.IsInvalidToken(words[i]) && words[i].length() != 0)
-            {
-                std::cout << "É AQUI" << std::endl;
-                return false;
-            } */
 
             if (analizer.IsInstruction(words[i]))
             {
@@ -215,25 +239,38 @@ bool Processing::SecondPass()
             }
         }
 
-        int j = 0;
-        std::cout << "TAMANHO MEMORIA: " << memory->GetMemorySize() << std::endl;
-        std::cout << "POSICAO: " << positionCounter << std::endl;
+        int j = 0, i = memory->GetMemorySize(), loopsCount = 0, dif = 0;
 
-        for (int i = memory->GetMemorySize(); i <= positionCounter; i++)
+        while (i <= positionCounter)
         {
+            std::cout << "ENTRO" << std::endl;
+
             if (analizer.IsInstruction(words[j]))
             {
                 memory->IncludeMemorySpace(analizer.GetInstructionOpCode(words[j]));
                 i++;
                 for (int k = 1; k <= analizer.GetInstructionOpNumber(words[j]); k++)
                 {
-                    if (tables->IsSymbolInSymbolTable(words[j + k]))
+                    if (tables->IsSymbolInSymbolTable(words[j + k + dif]))
                     {
-                        memory->IncludeMemorySpace(tables->GetSymbolAddr(words[j + k]));
+
+                        if (tables->IsSymbolVector(words[j + k + dif]) && words.size() > 2 && words[j + k + 1 + dif] == "+")
+                        {
+                            memory->IncludeMemorySpace(tables->GetSymbolAddr(words[j + k + dif]) + std::stoi(words[j + k + dif + 2]));
+                            dif += 2;
+                            i++;
+                        }
+                        else
+                        {
+                            memory->IncludeMemorySpace(tables->GetSymbolAddr(words[j + k + dif]));
+                            i++;
+                        }
                     }
                     else
+                    {
                         memory->IncludeMemorySpace(-1);
-                    i++;
+                        i++;
+                    }
                 }
             }
             else if (analizer.IsDirective(words[j]))
@@ -260,10 +297,23 @@ bool Processing::SecondPass()
                         i++;
                     }
                 }
+                else
+                {
+                    i++;
+                }
             }
+            else
+            {
+                loopsCount++;
+            }
+            std::cout << "SAIU" << std::endl;
+
+            if (loopsCount == 3)
+                break;
 
             if (words.size() > (j + 1))
-                j++;
+                j += dif + 1;
+            dif = 0;
         }
 
         lineCounter++;

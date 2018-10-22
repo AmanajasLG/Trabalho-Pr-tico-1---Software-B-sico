@@ -40,6 +40,19 @@ void PreProcessing::PreProcess()
                 {
                     break;
                 }
+                else if (i > 0 && boost::iequals(words[i - 1], "CONST"))
+                {
+                    if (boost::iequals(words[i].substr(0, 2), "0x"))
+                    {
+                        signed int val;
+                        val = std::strtol(words[i].c_str(), nullptr, 16);
+                        write_line += std::to_string(val);
+                    }
+                    else
+                    {
+                        write_line += words[i];
+                    }
+                }
                 else if (boost::iequals(words[i], "IF"))
                 {
                     if (i != 0)

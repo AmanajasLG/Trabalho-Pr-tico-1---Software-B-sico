@@ -23,8 +23,6 @@ bool Processing::FirstPass()
     std::string write_line = "";
     std::vector<std::string> words;
 
-    bool firstLine = true;
-
     while (!file_pre.eof())
     {
         std::getline(file_pre, line);
@@ -135,6 +133,7 @@ bool Processing::SecondPass()
         if (firstLine)
         {
             tests.TestIsModule(line);
+            firstLine = false;
         }
 
         for (int i = 0; i < words.size(); i++)
@@ -238,7 +237,7 @@ bool Processing::SecondPass()
 
         int j = 0, i = memory->GetMemorySize(), loopsCount = 0, dif = 0;
 
-        while (i <= positionCounter)
+        while (i < positionCounter)
         {
 
             if (analizer.IsInstruction(words[j]))

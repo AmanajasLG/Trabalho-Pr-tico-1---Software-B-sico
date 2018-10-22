@@ -19,8 +19,10 @@ int main(int argc, char *argv[])
     PreProcessing *pre_proc = new PreProcessing(argv[1], *_tables, _analizer);
 
     if (pre_proc->isFileOpen())
+    {
         pre_proc->PreProcess();
-    pre_proc->CloseFiles();
+        pre_proc->CloseFiles();
+    }
 
     Processing *proc = new Processing(argv[1], _tables, _analizer);
     if (proc->isFileOpen())
@@ -28,8 +30,9 @@ int main(int argc, char *argv[])
         if (proc->FirstPass())
             if (proc->SecondPass())
                 std::cout << "Programa montado com sucesso!" << std::endl;
+
+        proc->CloseFiles();
     }
-    proc->CloseFiles();
 
     return 0;
 }
